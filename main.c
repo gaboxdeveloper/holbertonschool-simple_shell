@@ -1,6 +1,6 @@
 #include "main.h"
 
-#define MAX_COMMAND_LEN 100
+/*#define MAX_COMMAND_LEN 100*/
 
 int main(void)
 {
@@ -9,9 +9,10 @@ int main(void)
     ssize_t nread;/*Numero de bytes leidos de la linea, EOF es -1*/
     pid_t child_pid;/*ID del proceso hijo*/
     int status;/*Estado del proceso hijo*/
-    char *args[2]; char full_command[MAX_COMMAND_LEN];/*Argumentos para el programa*/
+    int status_p = 1;
 
-    while (1) {
+    while (status_p == 1)
+    {
         printf("Cisnotfun$ ");
         nread = getline(&command, &len, stdin);
 
@@ -20,45 +21,42 @@ int main(void)
             command[nread - 1] = '\0';
 
         /*Si escribimos exit o presionamos "Ctrl + D" el programa termina*/
-        if ((strcmp(command, "exit") == 0) || (nread == -1))
+        if ((nread == -1))
         {
-            printf("Exiting the shell.\n");
-            break;
-        }
-
-        /*Buscar el camino completo del comando*/
-        strcpy(full_command, "/bin/");
-        strcat(full_command, command);
-
-        args[0] = full_command;
-        args[1] = NULL;
-
-        child_pid = fork();
-
-        if (child_pid == -1)
-        {
-            perror("fork");
-            exit(EXIT_FAILURE);
-        }
-        else if (child_pid == 0)
-        {
-            /*Child process*/
-            char *envp[] = {NULL};/*Variables de entorno*/
-            execve(full_command, args, envp);/*Ejecutar el programa*/
-            perror("execve");
-            exit(EXIT_FAILURE);
+            printf("\n");
+            status_p = -1;
         }
         else
         {
-            /*Parent process*/
-            waitpid(child_pid, &status, 0);/*Esperar a que termine el proceso hijo*/
-            if (WIFEXITED(status))
+            child_pid = fork();
+
+            if (child_pid == -1)
             {
-                printf("Child process exited with status %d\n", WEXITSTATUS(status));
+                perror("fork");
+                exit(EXIT_FAILURE);
+            }
+            else if (child_pid == 0)
+            {
+                /*Child process*/
+                /*tokenizer(command);*/
+                char *args[] = {"ls"};
+                char *envp[] = {NULL};/*Variables de entorno*/
+                execve(command, args, envp);/*Ejecutar el programa*/
+                perror("execve");
+                exit(EXIT_FAILURE);
             }
             else
             {
-                printf("Child process did not exit normally\n");
+                /*Parent process*/
+                waitpid(child_pid, &status, 0);/*Esperar a que termine el proceso hijo*/
+                /*if (WIFEXITED(status))
+                {
+                    printf("Child process exited with status %d\n", WEXITSTATUS(status));
+                }
+                else
+                {
+                    printf("Child process did not exit normally\n");
+                }*/
             }
         }
     }
