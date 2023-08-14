@@ -23,29 +23,25 @@ int main(void)
         {
             command[nread - 1] = '\0';
         }
+        child_pid = fork();
+        if (child_pid == -1)
+        {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        }
+        else if (child_pid == 0)
+        {
+            /*Child process*/
+            char *args[] = {NULL};
+            char *envp[] = {NULL};/*Variables de entorno*/
+            execve(command, args, envp);/*Ejecutar el programa*/
+            perror("execve");
+            exit(EXIT_FAILURE);
+        }
         else
         {
-            child_pid = fork();
-
-            if (child_pid == -1)
-            {
-                perror("fork");
-                exit(EXIT_FAILURE);
-            }
-            else if (child_pid == 0)
-            {
-                /*Child process*/
-                char *args[] = {NULL};
-                char *envp[] = {NULL};/*Variables de entorno*/
-                execve(command, args, envp);/*Ejecutar el programa*/
-                perror("execve");
-                exit(EXIT_FAILURE);
-            }
-            else
-            {
-                /*Parent process*/
-                waitpid(child_pid, &status, 0);/*Esperar a que termine el proceso hijo*/
-            }
+            /*Parent process*/
+            waitpid(child_pid, &status, 0);/*Esperar a que termine el proceso hijo*/
         }
     }
     free (command);
