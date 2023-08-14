@@ -1,7 +1,5 @@
 #include "main.h"
 
-/*#define MAX_COMMAND_LEN 100*/
-
 int main(void)
 {
     char *command = NULL;/*Puntero para almacenar el comando ingresado*/
@@ -9,17 +7,20 @@ int main(void)
     ssize_t nread;/*Numero de bytes leidos de la linea, EOF es -1*/
     pid_t child_pid;/*ID del proceso hijo*/
     int status;/*Estado del proceso hijo*/
-    int status_p = 1;
+    int status_p = 1; int isat = isatty(STDIN_FILENO);
 
     while (status_p == 1)
     {
-        printf("Cisnotfun$ ");
-        nread = getline(&command, &len, stdin);
-
+        if (isat == 1)
+        {
+            printf("Cisnotfun$ ");
+            nread = getline(&command, &len, stdin);
+        }
         /*Elimiar el caracter de salto de linea para mejor manejo*/
         if (nread > 0 && command[nread - 1] == '\n')
+        {
             command[nread - 1] = '\0';
-
+        }
         /*Si escribimos exit o presionamos "Ctrl + D" el programa termina*/
         if ((nread == -1))
         {
@@ -38,8 +39,7 @@ int main(void)
             else if (child_pid == 0)
             {
                 /*Child process*/
-                /*tokenizer(command);*/
-                char *args[] = {"ls"};
+                char *args[] = {NULL};
                 char *envp[] = {NULL};/*Variables de entorno*/
                 execve(command, args, envp);/*Ejecutar el programa*/
                 perror("execve");
@@ -49,14 +49,6 @@ int main(void)
             {
                 /*Parent process*/
                 waitpid(child_pid, &status, 0);/*Esperar a que termine el proceso hijo*/
-                /*if (WIFEXITED(status))
-                {
-                    printf("Child process exited with status %d\n", WEXITSTATUS(status));
-                }
-                else
-                {
-                    printf("Child process did not exit normally\n");
-                }*/
             }
         }
     }
