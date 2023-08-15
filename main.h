@@ -1,7 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#define MAX_COMMAND_LEN 100
+#define MAX_COMMAND_LEN 200
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,10 +10,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-void check_eof(int nread, char *command, int not_found, int status);
+void _eof(int nread, char *command, int not_found, int status);
 char *_getenv(char *env);
 char *_which(const char *command);
-/*int exec(char *fullpath);*/
+void _exec(char *fullpath);
 
 extern char **environ;
 
