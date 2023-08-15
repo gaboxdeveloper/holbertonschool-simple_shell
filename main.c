@@ -19,14 +19,14 @@ void check_eof(int characters, char *command, int not_found, int status)
 	}
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
     char *command = NULL; char *full_path = NULL;
-    size_t len = 1024;/*Variable para el tamaño de la linea*/
+    size_t len = 1024;
     ssize_t nread;/*Numero de bytes leidos de la linea, EOF es -1*/
-    pid_t child_pid;/*ID del proceso hijo*/
+    pid_t child_pid;
     int status, not_found = 0; int status_p = 1;
-    int isat = isatty(STDIN_FILENO); char *args[2];
+    int isat = isatty(STDIN_FILENO); char *args[2]; (void)argc; (void)argv;
 
     while (1)
     {
