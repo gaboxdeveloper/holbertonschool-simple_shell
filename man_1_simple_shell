@@ -1,0 +1,15 @@
+.TH Man page for a simple shell project for Holberton
+
+.SH NAME
+my_shell \- a simple shell program
+
+.SH SYNOPSIS
+
+.B my_shell
+
+.SH DESCRITION
+
+The software "my_shell" functions as a basic shell application capable of running both internal and external commands. This utility receives user input, analyzes whether the entered command falls within the category of internal or external commands, and subsequently carries out the appropriate execution based on the determination.
+
+.PP
+take commands from a user and execute them in the system
