@@ -38,19 +38,6 @@ file.txt img.png my_dir
 ### Built-in commands
 Apart from executing any executable file (such as `ls`), it also handles built-in commands, which are coded into the shell. These are:
 
-- **cd**
-
-If the targeted directory exists, it will change the current working directory *(cwd)* to the new one.
-```
-$ pwd
-/home/user
-$ ls
-file.txt my_dir
-$ cd my_dir
-$ pwd
-/home/user/my_dir
-```
-
 - **env**
 
 Prints the environment variables, along with its values.
